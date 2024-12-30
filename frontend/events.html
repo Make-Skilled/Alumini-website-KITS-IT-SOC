@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - Alumni Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background-color: #0056b3 !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .nav-link {
+            color: #fff !important;
+            font-weight: 600;
+        }
+
+        .navbar .nav-link:hover {
+            color: #ffd700 !important;
+        }
+
+        footer {
+            background-color: #0056b3 !important;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .section-title {
+            color: #0056b3;
+            font-weight: bold;
+        }
+
+        .event-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .event-card:hover {
+            transform: scale(1.02);
+        }
+
+        .event-card img {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .event-card .card-body {
+            padding: 15px;
+        }
+
+        .event-card h5 {
+            color: #0056b3;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html">Alumni Platform</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="alumni.html">Alumni Portal</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about-us.html">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="events.html">Events</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Events Section -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Explore Events</h2>
+        <!-- Upcoming Events -->
+        <div>
+            <h3 class="section-title">Upcoming Events</h3>
+            <div class="row g-4" id="upcoming-events">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+        <!-- Past Events -->
+        <div class="mt-5">
+            <h3 class="section-title">Past Events</h3>
+            <div class="row g-4" id="past-events">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 KKR & KSR Alumni Platform. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fetch events data and update the DOM
+        async function fetchEvents() {
+            try {
+                const response = await fetch('http://localhost:3000/all-events');  // Make API request
+                const events = await response.json();  // Parse the response into JSON
+
+                // Separate events into upcoming and past events (based on date)
+                const currentDate = new Date();
+                const upcomingEvents = events.filter(event => new Date(event.eventDate) > currentDate);
+                const pastEvents = events.filter(event => new Date(event.eventDate) <= currentDate);
+
+                // Function to render event cards
+                function renderEvents(events, containerId) {
+                    const container = document.getElementById(containerId);
+                    container.innerHTML = '';  // Clear previous content
+
+                    events.forEach(event => {
+                        const eventDate = new Date(event.eventDate).toLocaleDateString();
+                        const cardHTML = `
+              <div class="col-md-4">
+                <div class="card event-card">
+                  <img src="https://via.placeholder.com/400x200" alt="${event.eventName}" class="card-img-top">
+                  <div class="card-body">
+                    <h5 class="card-title">${event.eventName}</h5>
+                    <p class="card-text">Date: ${eventDate}<br>Location: ${event.location}</p>
+                    <p class="card-text">Registration Fee: $${event.registrationFee}</p>
+                    <p class="card-text">Total Registrations: ${event.totalRegistrations} / ${event.numPeople}</p>
+                    <p class="card-text">Department: ${event.department}</p>
+  
+                    <!-- Register Button and Hidden Input Field -->
+                    <button class="btn btn-primary register-btn" data-event-id="${event._id}">Register</button>
+                  </div>
+                </div>
+              </div>
+            `;
+                        container.innerHTML += cardHTML;
+                    });
+
+                    // Add event listeners to all the Register buttons
+                    const registerButtons = container.querySelectorAll('.register-btn');
+                    registerButtons.forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const eventId = e.target.getAttribute('data-event-id');
+                            registerForEvent(eventId);
+                        });
+                    });
+                }
+
+                // Render upcoming and past events
+                renderEvents(upcomingEvents, 'upcoming-events');
+                renderEvents(pastEvents, 'past-events');
+
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        }
+
+        // Register for an event
+        async function registerForEvent(eventId) {
+            try {
+                // Get the username from localStorage (assuming the username is stored directly)
+                const username = localStorage.getItem('authToken');
+                if (!username) {
+                    alert('You need to be logged in to register for an event');
+                    return;
+                }
+
+                const response = await fetch('http://localhost:3000/register-event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ eventId, username }),
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Registration successful!');
+                    fetchEvents(); // Refresh the events to show updated registrations
+                } else {
+                    alert(result.error || 'Error registering for event');
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                alert('An error occurred. Please try again later.');
+            }
+        }
+
+        // Call the function to fetch and display events
+        fetchEvents();
+
+    </script>
+
+</body>
+
+</html>

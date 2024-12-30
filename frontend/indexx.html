@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KITS Graduation Page</title>
+    <style>
+        /* Previous styles remain the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #004080 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .header .announcement {
+            font-size: 1rem;
+            text-align: right;
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 5px;
+            animation: glow 2s infinite;
+        }
+
+        .navbar {
+            display: flex;
+            background: #004080;
+            color: white;
+            padding: 12px;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .navbar a:hover {
+            background: #0059b3;
+            transform: translateY(-2px);
+        }
+
+        /* New Slideshow Styles */
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Navigation Arrows */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background: rgba(0, 0, 0, 0.3);
+            border: none;
+            z-index: 1;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Dots/bullets/indicators */
+        .dots-container {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 12px;
+            width: 12px;
+            margin: 0 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .dot.active, .dot:hover {
+            background-color: white;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #003366 0%, #004080 100%);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .navbar {
+                flex-wrap: wrap;
+            }
+
+            .navbar a {
+                flex: 1 1 120px;
+                text-align: center;
+            }
+
+            .slideshow-container {
+                height: 300px;
+            }
+        }
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .hero-title {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff3366 100%);
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid transparent;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #ff3366 0%, #ff6b6b 100%);
+            border-color: white;
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .cta-button {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header and Navbar remain same -->
+    <div class="header">
+        <h1>KITS (Autonomous)</h1>
+        <div class="announcement">
+            Happy to announce our institution secured Band of 151-300 in the innovation category in NIRF Ranking 2023.
+        </div>
+    </div>
+
+    <div class="navbar">
+        <a href="#">Home</a>
+        <a href="about-us.html">About Us</a>
+        <a href="alumni.html">Alumni</a>
+        <a href="contact-us.html">Contact Us</a>
+        <a href="signup.html">Sign Up</a>
+        <a href="login.html">Login</a>
+    </div>
+
+    <div class="slideshow-container">
+        <!-- Slides -->
+        <div class="slide active">
+            <img src="https://www.kitsguntur.ac.in/imagesnew/slider/home4/slide1.jpg" alt="Campus View">
+        </div>
+        <div class="slide">
+            <img src="https://www.kitsguntur.ac.in/imagesnew/slider/home4/slide2.jpg" alt="Graduation Ceremony">
+        </div>
+        <div class="slide">
+            <img src="https://www.kitsguntur.ac.in/imagesnew/slider/home4/slidenew2.jpg" alt="Student Life">
+        </div>
+        <div class="slide">
+            <img src="https://www.kitsguntur.ac.in/imagesnew/slider/home4/slidenew1.jpg" alt="Research Facilities">
+        </div>
+
+        <!-- Hero Content with CTA Button -->
+        <div class="hero-content">
+            <h2 class="hero-title">Welcome to KITS Alumni Network</h2>
+            <a href="alumni.html" class="cta-button">KITS Alumni Portal</a>
+        </div>
+
+        <!-- Navigation Controls -->
+        <button class="prev" onclick="changeSlide(-1)">❮</button>
+        <button class="next" onclick="changeSlide(1)">❯</button>
+
+        <div class="dots-container">
+            <span class="dot active" onclick="currentSlide(0)"></span>
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2024 KITS. All Rights Reserved.
+    </div>
+
+
+    <script>
+        let slideIndex = 0;
+        const slides = document.getElementsByClassName("slide");
+        const dots = document.getElementsByClassName("dot");
+        let slideInterval;
+
+        // Start automatic slideshow
+        startSlideshow();
+
+        function startSlideshow() {
+            slideInterval = setInterval(() => {
+                changeSlide(1);
+            }, 5000); // Change slide every 5 seconds
+        }
+
+        function changeSlide(direction) {
+            // Clear the existing interval
+            clearInterval(slideInterval);
+
+            // Remove active class from current slide and dot
+            slides[slideIndex].classList.remove("active");
+            dots[slideIndex].classList.remove("active");
+
+            // Calculate new slide index
+            slideIndex += direction;
+            if (slideIndex >= slides.length) slideIndex = 0;
+            if (slideIndex < 0) slideIndex = slides.length - 1;
+
+            // Add active class to new slide and dot
+            slides[slideIndex].classList.add("active");
+            dots[slideIndex].classList.add("active");
+
+            // Restart the slideshow
+            startSlideshow();
+        }
+
+        function currentSlide(index) {
+            // Clear the existing interval
+            clearInterval(slideInterval);
+
+            // Remove active class from current slide and dot
+            slides[slideIndex].classList.remove("active");
+            dots[slideIndex].classList.remove("active");
+
+            // Set new slide index
+            slideIndex = index;
+
+            // Add active class to new slide and dot
+            slides[slideIndex].classList.add("active");
+            dots[slideIndex].classList.add("active");
+
+            // Restart the slideshow
+            startSlideshow();
+        }
+    </script>
+</body>
+</html>
