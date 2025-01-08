@@ -100,7 +100,7 @@
 // Function to load events from the API and populate the table
 async function loadEvents() {
     try {
-        const response = await fetch('http://localhost:3000/all-events');
+        const response = await fetch('https://kitsalumnibackend.makeskilled.com/all-events');
         const events = await response.json();
         const tableBody = document.getElementById('event-table-body');
         tableBody.innerHTML = ''; // Clear any existing rows
@@ -140,7 +140,7 @@ async function cancelEvent(eventId) {
     if (confirm("Are you sure you want to cancel this event?")) {
         try {
             // Sending DELETE request to the server to delete the event by its ID
-            const response = await fetch(`http://localhost:3000/delete-event/${eventId}`, {
+            const response = await fetch(`https://kitsalumnibackend.makeskilled.com/delete-event/${eventId}`, {
                 method: 'DELETE'
             });
 
