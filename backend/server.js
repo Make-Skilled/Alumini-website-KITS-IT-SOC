@@ -24,6 +24,9 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true 
     console.error('Failed to connect to MongoDB', err);
     process.exit(1);
   });
+  app.get('/',async(req,res)=>{
+    res.send({message:"API server running successfully"});
+  })
 
 
   app.post('/signup', async (req, res) => {
