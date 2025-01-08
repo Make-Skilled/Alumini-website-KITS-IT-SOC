@@ -112,7 +112,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
             localStorage.setItem('authToken', data.token);
 
             // Redirect to dashboard or another page
-            window.location.href = 'index.html';
+            window.location.href = 'alumni.html';
         } else {
             // Display error message if credentials are invalid
             alert(data.error || 'An error occurred during login');
