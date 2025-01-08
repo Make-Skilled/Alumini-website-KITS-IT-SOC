@@ -6,9 +6,9 @@ const { ObjectId } = require('mongodb'); // Import ObjectId from MongoDB
 
 const app = express();
 app.use(cors());
-const port = 3000;
-const mongoUrl = 'mongodb+srv://krishnareddy:1234567890@diploma.1v5g6.mongodb.net/';
-const dbName = 'userDB';
+const port = 3001;
+const mongoUrl = 'mongodb://127.0.0.1:17017';
+const dbName = 'KITS-SOC-Alumni';
 let db;
 
 // Middleware
