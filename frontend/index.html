@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KITS Graduation Page</title>
     <style>
-        /* Previous styles remain the same */
         * {
             margin: 0;
             padding: 0;
@@ -26,6 +25,7 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: relative;
         }
 
         .header h1 {
@@ -42,6 +42,25 @@
             padding: 10px 20px;
             border-radius: 5px;
             animation: glow 2s infinite;
+        }
+
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            z-index: 1001;
+        }
+
+        .menu-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
         }
 
         .navbar {
@@ -68,7 +87,6 @@
             transform: translateY(-2px);
         }
 
-        /* New Slideshow Styles */
         .slideshow-container {
             position: relative;
             max-width: 100%;
@@ -97,7 +115,6 @@
             object-fit: cover;
         }
 
-        /* Navigation Arrows */
         .prev, .next {
             cursor: pointer;
             position: absolute;
@@ -128,7 +145,6 @@
             background-color: rgba(0, 0, 0, 0.8);
         }
 
-        /* Dots/bullets/indicators */
         .dots-container {
             position: absolute;
             bottom: 20px;
@@ -153,34 +169,6 @@
             background-color: white;
         }
 
-        .footer {
-            background: linear-gradient(135deg, #003366 0%, #004080 100%);
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
-
-            .navbar {
-                flex-wrap: wrap;
-            }
-
-            .navbar a {
-                flex: 1 1 120px;
-                text-align: center;
-            }
-
-            .slideshow-container {
-                height: 300px;
-            }
-        }
         .hero-content {
             position: absolute;
             top: 50%;
@@ -220,11 +208,57 @@
             border-color: white;
         }
 
-        .cta-button:active {
-            transform: translateY(-1px);
+        .footer {
+            background: linear-gradient(135deg, #003366 0%, #004080 100%);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding-top: 60px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .navbar {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: #004080;
+                padding: 0;
+                z-index: 1000;
+            }
+
+            .navbar.active {
+                display: flex;
+            }
+
+            .navbar a {
+                padding: 15px 25px;
+                width: 100%;
+                text-align: left;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .navbar a:last-child {
+                border-bottom: none;
+            }
+
+            .slideshow-container {
+                height: 300px;
+            }
+
             .hero-title {
                 font-size: 2rem;
             }
@@ -233,13 +267,18 @@
                 padding: 12px 30px;
                 font-size: 1.1rem;
             }
+
+            .header .announcement {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header and Navbar remain same -->
     <div class="header">
         <h1>KITS (Autonomous)</h1>
+        <button class="menu-button" aria-label="Toggle menu">☰</button>
         <div class="announcement">
             Happy to announce our institution secured Band of 151-300 in the innovation category in NIRF Ranking 2023.
         </div>
@@ -256,7 +295,6 @@
     </div>
 
     <div class="slideshow-container">
-        <!-- Slides -->
         <div class="slide active">
             <img src="https://www.kitsguntur.ac.in/imagesnew/slider/home4/slide1.jpg" alt="Campus View">
         </div>
@@ -270,13 +308,11 @@
             <img src="https://www.kitsguntur.ac.in/imagesnew/slider/home4/slidenew1.jpg" alt="Research Facilities">
         </div>
 
-        <!-- Hero Content with CTA Button -->
         <div class="hero-content">
             <h2 class="hero-title">Welcome to KITS Alumni Network</h2>
             <a href="login.html" class="cta-button">KITS Alumni Portal</a>
         </div>
 
-        <!-- Navigation Controls -->
         <button class="prev" onclick="changeSlide(-1)">❮</button>
         <button class="next" onclick="changeSlide(1)">❯</button>
 
@@ -292,61 +328,68 @@
         &copy; 2024 KITS. All Rights Reserved.
     </div>
 
-
     <script>
+        // Menu Toggle Functionality
+        document.querySelector('.menu-button').addEventListener('click', function(event) {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('active');
+            event.stopPropagation();
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navbar = document.querySelector('.navbar');
+            const menuButton = document.querySelector('.menu-button');
+            
+            if (!navbar.contains(event.target) && !menuButton.contains(event.target) && navbar.classList.contains('active')) {
+                navbar.classList.remove('active');
+            }
+        });
+
+        // Slideshow Functionality
         let slideIndex = 0;
         const slides = document.getElementsByClassName("slide");
         const dots = document.getElementsByClassName("dot");
         let slideInterval;
 
-        // Start automatic slideshow
-        startSlideshow();
-
         function startSlideshow() {
             slideInterval = setInterval(() => {
                 changeSlide(1);
-            }, 5000); // Change slide every 5 seconds
+            }, 5000);
         }
 
         function changeSlide(direction) {
-            // Clear the existing interval
             clearInterval(slideInterval);
-
-            // Remove active class from current slide and dot
+            
             slides[slideIndex].classList.remove("active");
             dots[slideIndex].classList.remove("active");
-
-            // Calculate new slide index
+            
             slideIndex += direction;
             if (slideIndex >= slides.length) slideIndex = 0;
             if (slideIndex < 0) slideIndex = slides.length - 1;
-
-            // Add active class to new slide and dot
+            
             slides[slideIndex].classList.add("active");
             dots[slideIndex].classList.add("active");
-
-            // Restart the slideshow
+            
             startSlideshow();
         }
 
         function currentSlide(index) {
-            // Clear the existing interval
             clearInterval(slideInterval);
-
-            // Remove active class from current slide and dot
+            
             slides[slideIndex].classList.remove("active");
             dots[slideIndex].classList.remove("active");
-
-            // Set new slide index
+            
             slideIndex = index;
-
-            // Add active class to new slide and dot
+            
             slides[slideIndex].classList.add("active");
             dots[slideIndex].classList.add("active");
-
-            // Restart the slideshow
+            
             startSlideshow();
         }
+
+        // Start the slideshow when the page loads
+        startSlideshow();
     </script>
 </body>
 </html>
